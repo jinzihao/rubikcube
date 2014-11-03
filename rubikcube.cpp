@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
+			//initialize output file
+			ofstream fout("solution.txt");  
+			fout.close();
 			r=1;
 			while(r==1)
 			{
@@ -352,6 +355,8 @@ int stage2()
 			F();
 			rotatexz();
 			B();
+			B();
+			B();
 			status=1;
 		}
 		else if (cube[4][1][2]==maincolor)
@@ -360,8 +365,12 @@ int stage2()
 			F();
 			rotatexz();
 			B();
+			B();
+			B();
 			F();
 			rotatexz();
+			B();
+			B();
 			B();
 			status=1;
 		}
@@ -371,11 +380,17 @@ int stage2()
 			F();
 			rotatexz();
 			B();
-			F();
-			rotatexz();
+			B();
 			B();
 			F();
 			rotatexz();
+			B();
+			B();
+			B();
+			F();
+			rotatexz();
+			B();
+			B();
 			B();
 			status=1;
 		}
@@ -405,7 +420,7 @@ int stage2()
 			F();
 		}
 		L(); //将上面的maincolor块翻转到前面 
-	} 
+	}
 	else //没有2类情况，（1,2,3) (3,3,2) (2,2,1) (4,1,2) 均不为maincolor，以下讨论3类情况 
 	{
 		//第一步，将3类情况的4种子情况化为cube[3][2][1]==maincolor的标准情况，对前面十字无影响 
@@ -514,8 +529,13 @@ int stage2()
 							F();
 						}
 						U(); //化为4类情况 	
+						status=1; 
 					}
 				}
+			}
+			else
+			{
+				status=1;
 			}
 			if (status==1)
 			{
@@ -589,7 +609,7 @@ int stage2()
 
 void output(char message[])
 {
-	ofstream fout("solution.txt");  
+	ofstream fout("solution.txt", ios::out | ios::app);  
 	fout<<message<<endl;
 	fout.close();
 }
