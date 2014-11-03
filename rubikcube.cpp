@@ -4,17 +4,11 @@
 using namespace std;
 int cube[7][4][4]; //Store colors: 6 faces，3 lines，3 columns; red=1, orange=6, green=2, blue=5, white=3, yellow=4
 void L(); //Left - clockwise 90° 
-void Li(); //Left - counterclockwise 90°
 void R(); //Right - clockwise 90° 
-void Ri();  //Right - counterclockwise 90°
 void U(); //Up - clockwise 90° 
-void Ui();  //Up - counterclockwise 90°
 void D(); //Down - clockwise 90° 
-void Di();  //Down - counterclockwise 90°
 void F(); //Front - clockwise 90° 
-void Fi();  //Front - counterclockwise 90°
 void B(); //Back - clockwise 90° 
-void Bi();  //Back - counterclockwise 90°
 void chainswap(int &a, int &b, int &c, int &d); //a,b,c,d -> d,a,b,c
 void chainswapi(int &a, int &b, int &c, int &d); //a,b,c,d -> b,c,d,a
 int validatecube(); 
@@ -23,6 +17,9 @@ int max(int a, int b);
 int validateside(); 
 int validatecorner(); 
 void swap (int &a, int &b);
+void rotatexy();
+void rotatexz();
+void rotateyz();
 
 int main(int argc, char *argv[])
 {
@@ -67,16 +64,6 @@ void chainswap(int &a, int &b, int &c, int &d) //a,b,c,d -> d,a,b,c
 	a=s;	
 }
 
-void chainswapi(int &a, int &b, int &c, int &d) //a,b,c,d -> b,c,d,a
-{
-	int s;
-	s=a;
-	a=b;
-	b=c;
-	c=d;
-	d=s;	
-}
-
 void L() //20次变换，5组chainswap 
 {
 	//面内变换 
@@ -86,17 +73,6 @@ void L() //20次变换，5组chainswap
 	chainswap(cube[3][1][1],cube[5][1][1],cube[4][1][1],cube[6][3][3]);
 	chainswap(cube[3][2][1],cube[5][2][1],cube[4][2][1],cube[6][2][3]);
 	chainswap(cube[3][3][1],cube[5][3][1],cube[4][3][1],cube[6][1][3]);
-}
-
-void Li() //可以通过3次L实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[1][1][1],cube[1][1][3],cube[1][3][3],cube[1][3][1]);
-	chainswapi(cube[1][1][2],cube[1][2][3],cube[1][3][2],cube[1][2][1]);
-	//其他面的变换 
-	chainswapi(cube[3][1][1],cube[5][1][1],cube[4][1][1],cube[6][3][3]);
-	chainswapi(cube[3][2][1],cube[5][2][1],cube[4][2][1],cube[6][2][3]);
-	chainswapi(cube[3][3][1],cube[5][3][1],cube[4][3][1],cube[6][1][3]);
 }
 
 void R() //20次变换，5组chainswap 
@@ -110,17 +86,6 @@ void R() //20次变换，5组chainswap
 	chainswap(cube[3][1][3],cube[6][3][1],cube[4][1][3],cube[5][1][3]);
 }
 
-void Ri() //可以通过3次R实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[2][1][1],cube[2][1][3],cube[2][3][3],cube[2][3][1]);
-	chainswapi(cube[2][1][2],cube[2][2][3],cube[2][3][2],cube[2][2][1]);
-	//其他面的变换 
-	chainswapi(cube[3][3][3],cube[6][1][1],cube[4][3][3],cube[5][3][3]);
-	chainswapi(cube[3][2][3],cube[6][2][1],cube[4][2][3],cube[5][2][3]);
-	chainswapi(cube[3][1][3],cube[6][3][1],cube[4][1][3],cube[5][1][3]);
-}
-
 void U() //20次变换，5组chainswap 
 {
 	//面内变换 
@@ -130,17 +95,6 @@ void U() //20次变换，5组chainswap
 	chainswap(cube[1][1][1],cube[6][1][1],cube[2][1][1],cube[5][1][1]);
 	chainswap(cube[1][1][2],cube[6][1][2],cube[2][1][2],cube[5][1][2]);
 	chainswap(cube[1][1][3],cube[6][1][3],cube[2][1][3],cube[5][1][3]);
-}
-
-void Ur() //可以通过3次U实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[3][1][1],cube[3][1][3],cube[3][3][3],cube[3][3][1]);
-	chainswapi(cube[3][1][2],cube[3][2][3],cube[3][3][2],cube[3][2][1]);
-	//其他面的变换 
-	chainswapi(cube[1][1][1],cube[6][1][1],cube[2][1][1],cube[5][1][1]);
-	chainswapi(cube[1][1][2],cube[6][1][2],cube[2][1][2],cube[5][1][2]);
-	chainswapi(cube[1][1][3],cube[6][1][3],cube[2][1][3],cube[5][1][3]);
 }
 
 void D() //20次变换，5组chainswap 
@@ -154,17 +108,6 @@ void D() //20次变换，5组chainswap
 	chainswap(cube[5][3][3],cube[2][3][3],cube[6][3][3],cube[1][3][3]);
 }
 
-void Dr() //可以通过3次D实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[4][1][1],cube[4][1][3],cube[4][3][3],cube[4][3][1]);
-	chainswapi(cube[4][1][2],cube[4][2][3],cube[4][3][2],cube[4][2][1]);
-	//其他面的变换 
-	chainswapi(cube[5][3][1],cube[2][3][1],cube[6][3][1],cube[1][3][1]);
-	chainswapi(cube[5][3][2],cube[2][3][2],cube[6][3][2],cube[1][3][2]);
-	chainswapi(cube[5][3][3],cube[2][3][3],cube[6][3][3],cube[1][3][3]);
-}
-
 void F() //20次变换，5组chainswap 
 {
 	//面内变换 
@@ -176,17 +119,6 @@ void F() //20次变换，5组chainswap
 	chainswap(cube[3][3][3],cube[2][3][1],cube[4][1][1],cube[1][1][3]);
 }
 
-void Fi() //可以通过3次F实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[5][1][1],cube[5][1][3],cube[5][3][3],cube[5][3][1]);
-	chainswapi(cube[5][1][2],cube[5][2][3],cube[5][3][2],cube[5][2][1]);
-	//其他面的变换 
-	chainswapi(cube[3][3][1],cube[2][1][1],cube[4][1][3],cube[1][3][3]);
-	chainswapi(cube[3][3][2],cube[2][2][1],cube[4][1][2],cube[1][2][3]);
-	chainswapi(cube[3][3][3],cube[2][3][1],cube[4][1][1],cube[1][1][3]);
-}
-
 void B() //20次变换，5组chainswap 
 {
 	//面内变换 
@@ -196,17 +128,6 @@ void B() //20次变换，5组chainswap
 	chainswap(cube[3][1][3],cube[1][1][1],cube[4][3][1],cube[2][3][3]);
 	chainswap(cube[3][1][2],cube[1][2][1],cube[4][3][2],cube[2][2][3]);
 	chainswap(cube[3][1][1],cube[1][3][1],cube[4][3][3],cube[2][1][3]);
-}
-
-void Bi() //可以通过3次B实现，为提高效率，单独写一个函数 
-{
-	//面内变换 
-	chainswapi(cube[6][1][1],cube[6][1][3],cube[6][3][3],cube[6][3][1]);
-	chainswapi(cube[6][1][2],cube[6][2][3],cube[6][3][2],cube[6][2][1]);
-	//其他面的变换 
-	chainswapi(cube[3][1][3],cube[1][1][1],cube[4][3][1],cube[2][3][3]);
-	chainswapi(cube[3][1][2],cube[1][2][1],cube[4][3][2],cube[2][2][3]);
-	chainswapi(cube[3][1][1],cube[1][3][1],cube[4][3][3],cube[2][1][3]);
 }
 
 int validatecube()
@@ -382,3 +303,23 @@ void swap (int &a, int &b)
 	b=c;
 }
 
+void rotatexy()
+{
+	chainswap(cube[5][2][1],cube[2][2][1],cube[6][2][1],cube[1][2][1]);
+	chainswap(cube[5][2][2],cube[2][2][2],cube[6][2][2],cube[1][2][2]);
+	chainswap(cube[5][2][3],cube[2][2][3],cube[6][2][3],cube[1][2][3]);
+}
+
+void rotatexz()
+{
+	chainswap(cube[3][2][1],cube[2][1][2],cube[4][2][3],cube[1][3][2]);
+	chainswap(cube[3][2][2],cube[2][2][2],cube[4][2][2],cube[1][2][2]);
+	chainswap(cube[3][2][3],cube[2][3][2],cube[4][2][1],cube[1][1][2]);
+}
+
+void rotateyz()
+{
+	chainswap(cube[5][1][2],cube[3][1][2],cube[6][3][2],cube[4][1][2]);
+	chainswap(cube[5][2][2],cube[3][2][2],cube[6][2][2],cube[4][2][2]);
+	chainswap(cube[5][3][2],cube[3][3][2],cube[6][1][2],cube[4][3][2]);
+}
