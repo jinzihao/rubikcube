@@ -20,6 +20,7 @@ void rotatexy();
 void rotatexz();
 void rotateyz();
 int stage2();
+void stage2_finalize();
 void output(char message[]);
 
 int main(int argc, char *argv[])
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
 			{
 				r=stage2();
 			}
+			stage2_finalize(); 
 		}
 	}
 	else
@@ -605,6 +607,25 @@ int stage2()
 		}
 	}
 	return status;
+}
+
+void stage2_finalize() //finalize to match goal 2 
+{
+	if (cube[3][3][2]==cube[1][2][2])
+	{
+		rotatexz();
+	}
+	else if (cube[3][3][2]==cube[4][2][2])
+	{
+		rotatexz();
+		rotatexz();
+	}
+	else if (cube[3][3][2]==cube[2][2][2])
+	{
+		rotatexz();
+		rotatexz();
+		rotatexz();
+	}
 }
 
 void output(char message[])
