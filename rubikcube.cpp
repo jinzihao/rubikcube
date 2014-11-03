@@ -10,7 +10,6 @@ void D(); //Down - clockwise 90°
 void F(); //Front - clockwise 90° 
 void B(); //Back - clockwise 90° 
 void chainswap(int &a, int &b, int &c, int &d); //a,b,c,d -> d,a,b,c
-void chainswapi(int &a, int &b, int &c, int &d); //a,b,c,d -> b,c,d,a
 int validatecube(); 
 int min(int a, int b);
 int max(int a, int b);
@@ -20,6 +19,8 @@ void swap (int &a, int &b);
 void rotatexy();
 void rotatexz();
 void rotateyz();
+int stage2();
+void output(char message[]);
 
 int main(int argc, char *argv[])
 {
@@ -44,7 +45,11 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			
+			r=1;
+			while(r==1)
+			{
+				r=stage2();
+			}
 		}
 	}
 	else
@@ -73,6 +78,7 @@ void L() //20次变换，5组chainswap
 	chainswap(cube[3][1][1],cube[5][1][1],cube[4][1][1],cube[6][3][3]);
 	chainswap(cube[3][2][1],cube[5][2][1],cube[4][2][1],cube[6][2][3]);
 	chainswap(cube[3][3][1],cube[5][3][1],cube[4][3][1],cube[6][1][3]);
+	output("L");
 }
 
 void R() //20次变换，5组chainswap 
@@ -84,6 +90,7 @@ void R() //20次变换，5组chainswap
 	chainswap(cube[3][3][3],cube[6][1][1],cube[4][3][3],cube[5][3][3]);
 	chainswap(cube[3][2][3],cube[6][2][1],cube[4][2][3],cube[5][2][3]);
 	chainswap(cube[3][1][3],cube[6][3][1],cube[4][1][3],cube[5][1][3]);
+	output("R");
 }
 
 void U() //20次变换，5组chainswap 
@@ -95,6 +102,7 @@ void U() //20次变换，5组chainswap
 	chainswap(cube[1][1][1],cube[6][1][1],cube[2][1][1],cube[5][1][1]);
 	chainswap(cube[1][1][2],cube[6][1][2],cube[2][1][2],cube[5][1][2]);
 	chainswap(cube[1][1][3],cube[6][1][3],cube[2][1][3],cube[5][1][3]);
+	output("U");
 }
 
 void D() //20次变换，5组chainswap 
@@ -106,6 +114,7 @@ void D() //20次变换，5组chainswap
 	chainswap(cube[5][3][1],cube[2][3][1],cube[6][3][1],cube[1][3][1]);
 	chainswap(cube[5][3][2],cube[2][3][2],cube[6][3][2],cube[1][3][2]);
 	chainswap(cube[5][3][3],cube[2][3][3],cube[6][3][3],cube[1][3][3]);
+	output("D");
 }
 
 void F() //20次变换，5组chainswap 
@@ -117,6 +126,7 @@ void F() //20次变换，5组chainswap
 	chainswap(cube[3][3][1],cube[2][1][1],cube[4][1][3],cube[1][3][3]);
 	chainswap(cube[3][3][2],cube[2][2][1],cube[4][1][2],cube[1][2][3]);
 	chainswap(cube[3][3][3],cube[2][3][1],cube[4][1][1],cube[1][1][3]);
+	output("F");
 }
 
 void B() //20次变换，5组chainswap 
@@ -128,6 +138,7 @@ void B() //20次变换，5组chainswap
 	chainswap(cube[3][1][3],cube[1][1][1],cube[4][3][1],cube[2][3][3]);
 	chainswap(cube[3][1][2],cube[1][2][1],cube[4][3][2],cube[2][2][3]);
 	chainswap(cube[3][1][1],cube[1][3][1],cube[4][3][3],cube[2][1][3]);
+	output("B");
 }
 
 int validatecube()
@@ -275,7 +286,7 @@ int validatecorner()
 			for (k=j;k<7;k++)
 			{
 				e=i+j*7+k*49;
-				if (e==317||e==324||e==205||e==156||e==267||e==274||e==333||e==332)
+				if (e==317||e==324||e==211||e==162||e==267||e==274||e==333||e==332)
 				{
 					if (result[e]!=1)
 					{
@@ -308,6 +319,7 @@ void rotatexy()
 	chainswap(cube[5][2][1],cube[2][2][1],cube[6][2][1],cube[1][2][1]);
 	chainswap(cube[5][2][2],cube[2][2][2],cube[6][2][2],cube[1][2][2]);
 	chainswap(cube[5][2][3],cube[2][2][3],cube[6][2][3],cube[1][2][3]);
+	output("rxy");
 }
 
 void rotatexz()
@@ -315,6 +327,7 @@ void rotatexz()
 	chainswap(cube[3][2][1],cube[2][1][2],cube[4][2][3],cube[1][3][2]);
 	chainswap(cube[3][2][2],cube[2][2][2],cube[4][2][2],cube[1][2][2]);
 	chainswap(cube[3][2][3],cube[2][3][2],cube[4][2][1],cube[1][1][2]);
+	output("rxz");
 }
 
 void rotateyz()
@@ -322,4 +335,261 @@ void rotateyz()
 	chainswap(cube[5][1][2],cube[3][1][2],cube[6][3][2],cube[4][1][2]);
 	chainswap(cube[5][2][2],cube[3][2][2],cube[6][2][2],cube[4][2][2]);
 	chainswap(cube[5][3][2],cube[3][3][2],cube[6][1][2],cube[4][3][2]);
+	output("ryz");
+}
+
+int stage2()
+{
+	int maincolor=cube[5][2][2];
+	int status=0;
+	int i;
+	//第一步，只转视角，不影响魔方状态 
+	if (cube[3][3][2]!=maincolor)
+	{
+		if (cube[1][2][3]==maincolor)
+		{
+			//xz平面顺时针转90°，化为 cube[3][3][2]==maincolor的情况 
+			F();
+			rotatexz();
+			B();
+			status=1;
+		}
+		else if (cube[4][1][2]==maincolor)
+		{
+			//xz平面顺时针转180°，化为 cube[3][3][2]==maincolor的情况 
+			F();
+			rotatexz();
+			B();
+			F();
+			rotatexz();
+			B();
+			status=1;
+		}
+		else if (cube[2][2][1]==maincolor)
+		{
+			//xz平面顺时针转270°，化为 cube[3][3][2]==maincolor的情况 
+			F();
+			rotatexz();
+			B();
+			F();
+			rotatexz();
+			B();
+			F();
+			rotatexz();
+			B();
+			status=1;
+		}
+	}
+	else
+	{
+		status=1; // cube[3][3][2]==maincolor，无需操作，直接记为status=1，可以进行下一步操作 
+	} 
+	//第二步，改变魔方状态，不影响前面十字的其他部分 
+	if (status==1)
+	{
+		U(); //上面顺时针转90°，准备翻转到前面
+		//把前面左侧三格留出空位 
+		if (cube[5][3][2]!=maincolor)
+		{
+			F();
+		}
+		else if (cube[5][2][3]!=maincolor) 
+		{
+			F();
+			F();
+		}
+		else if (cube[5][1][2]!=maincolor)
+		{
+			F();
+			F();
+			F();
+		}
+		L(); //将上面的maincolor块翻转到前面 
+	} 
+	else //没有2类情况，（1,2,3) (3,3,2) (2,2,1) (4,1,2) 均不为maincolor，以下讨论3类情况 
+	{
+		//第一步，将3类情况的4种子情况化为cube[3][2][1]==maincolor的标准情况，对前面十字无影响 
+		 if (cube[3][2][1]!=maincolor)
+		 {
+			if (cube[1][3][2]==maincolor) //xz平面顺时针转90°，化为 cube[3][2][1]==maincolor的情况 
+			{
+				rotatexz();
+				status=1;
+			}
+			else if (cube[4][2][3]==maincolor) //xz平面顺时针转180°，化为 cube[3][2][1]==maincolor的情况 
+			{
+				rotatexz();
+				rotatexz();
+				status=1;
+			}
+			else if (cube[2][1][2]==maincolor) //xz平面顺时针转270°，化为 cube[3][2][1]==maincolor的情况 
+			{
+				rotatexz();
+				rotatexz();
+				rotatexz();
+				status=1;
+			}
+		}
+		else
+		{
+			status=1;
+		}
+		if (status==1)
+		{
+			//把前面左侧三格留出空位 
+			if (cube[5][3][2]!=maincolor)
+			{
+				F();
+			}
+			else if (cube[5][2][3]!=maincolor) 
+			{
+				F();
+				F();
+			}
+			else if (cube[5][1][2]!=maincolor)
+			{
+				F();
+				F();
+				F();
+			}
+			L(); //将上面的maincolor块翻转到前面 
+		}
+		else //没有3类情况，（3,2,1) (1,3,2) (4,2,3) (2,1,2) 均不为maincolor，以下讨论4类情况 
+		{
+			//第一步，将4类情况的4种子情况化为cube[3][2][3]==maincolor的标准情况，对前面十字无影响 
+			if (cube[3][2][3]!=maincolor)
+			{
+				if (cube[1][1][2]==maincolor) //xz平面顺时针转90°，化为 cube[3][2][3]==maincolor的情况 
+				{
+					rotatexz();
+					status=1;
+				}
+				else if (cube[4][2][1]==maincolor) //xz平面顺时针转180°，化为 cube[3][2][3]==maincolor的情况 
+				{
+					rotatexz();
+					rotatexz();
+					status=1;
+				}
+				else if (cube[2][3][2]==maincolor) //xz平面顺时针转270°，化为 cube[3][2][3]==maincolor的情况 
+				{
+					rotatexz();
+					rotatexz();
+					rotatexz();
+					status=1;
+				}
+				else
+				{
+					if (cube[3][1][2]==maincolor||cube[2][2][3]==maincolor||cube[4][3][2]==maincolor||cube[1][2][1]==maincolor) //4.5类情况，可以化为在对前面无影响的情况下化为4类情况 
+					{
+						//将 (2,2,3) (4,3,2) (1,2,1)化为 (3,1,2)的标准情况 
+						if (cube[2][2][3]==maincolor)
+						{
+							B();
+						}
+						else if (cube[4][3][2]==maincolor)
+						{
+							B();
+							B();
+						}
+						else if (cube[1][2][1]==maincolor)
+						{
+							B();
+							B();
+							B();
+						}
+						//把前面上方三格留出空位 
+						if (cube[5][2][1]!=maincolor)
+						{
+							F();
+						}
+						else if (cube[5][3][2]!=maincolor) 
+						{
+							F();
+							F();
+						}
+						else if (cube[5][2][3]!=maincolor)
+						{
+							F();
+							F();
+							F();
+						}
+						U(); //化为4类情况 	
+					}
+				}
+			}
+			if (status==1)
+			{
+				//把前面右侧三格留出空位 
+				if (cube[5][1][2]!=maincolor)
+				{
+					F();
+				}
+				else if (cube[5][2][1]!=maincolor) 
+				{
+					F();
+					F();
+				}
+				else if (cube[5][3][2]!=maincolor)
+				{
+					F();
+					F();
+					F();
+				}
+				R(); //将上面的maincolor块翻转到前面 
+				R(); 
+				R(); 
+			}
+			else //没有4类和4.5类情况，(3,2,3) (1,1,2) (4,2,1) (2,3,2) (3,1,2) (1,2,1) (4,3,2) (2,2,3) 均不为maincolor，以下讨论5类情况 
+			{
+				//第一步，将5类情况的4种子情况化为cube[6][2][3]==maincolor的标准情况，对前面十字无影响 
+				if (cube[6][1][2]==maincolor)
+				{
+					B();
+					status=1;
+				}
+				else if (cube[6][2][1]==maincolor)
+				{
+					B();
+					B();
+					status=1;
+				}
+				else if (cube[6][3][2]==maincolor)
+				{
+					B();
+					B();
+					B();
+					status=1;
+				}
+				if (status==1)
+				{
+					//把前面左侧三格留出空位 
+					if (cube[5][3][2]!=maincolor)
+					{
+						F();
+					}
+					else if (cube[5][2][3]!=maincolor) 
+					{
+						F();
+						F();
+					}
+					else if (cube[5][1][2]!=maincolor)
+					{
+						F();
+						F();
+						F();
+					}
+					L(); //将上面的maincolor块翻转到前面 
+					L();
+				}
+			}
+		}
+	}
+	return status;
+}
+
+void output(char message[])
+{
+	ofstream fout("solution.txt");  
+	fout<<message<<endl;
+	fout.close();
 }
