@@ -20,8 +20,10 @@ void rotatexy();
 void rotatexz();
 void rotateyz();
 int stage2();
-void stage2_finalize();
 void output(char message[]);
+void stage2_finalize();
+int stage3();
+void stage3_finalize();
 
 int main(int argc, char *argv[])
 {
@@ -55,6 +57,12 @@ int main(int argc, char *argv[])
 				r=stage2();
 			}
 			stage2_finalize(); 
+			r=1;
+			while(r==1)
+			{
+				r=stage3();
+			}
+			stage3_finalize();
 		}
 	}
 	else
@@ -347,7 +355,6 @@ int stage2()
 {
 	int maincolor=cube[5][2][2];
 	int status=0;
-	int i;
 	//第一步，只转视角，不影响魔方状态 
 	if (cube[3][3][2]!=maincolor)
 	{
@@ -364,6 +371,7 @@ int stage2()
 		else if (cube[4][1][2]==maincolor)
 		{
 			//xz平面顺时针转180°，化为 cube[3][3][2]==maincolor的情况 
+			/*	
 			F();
 			rotatexz();
 			B();
@@ -374,11 +382,20 @@ int stage2()
 			B();
 			B();
 			B();
+			*/
+			//optimized version:
+			F();
+			F();
+			rotatexy();
+			rotatexz();
+			B();
+			B(); 
 			status=1;
 		}
 		else if (cube[2][2][1]==maincolor)
 		{
 			//xz平面顺时针转270°，化为 cube[3][3][2]==maincolor的情况 
+			/* 
 			F();
 			rotatexz();
 			B();
@@ -394,6 +411,17 @@ int stage2()
 			B();
 			B();
 			B();
+			*/
+			//optimized version:
+			F();
+			F();
+			F();
+			rotatexy();
+			rotatexz();
+			rotatexz();
+			B();
+			B(); 
+			B(); 
 			status=1;
 		}
 	}
@@ -454,20 +482,23 @@ int stage2()
 		if (status==1)
 		{
 			//把前面左侧三格留出空位 
-			if (cube[5][3][2]!=maincolor)
-			{
-				F();
-			}
-			else if (cube[5][2][3]!=maincolor) 
-			{
-				F();
-				F();
-			}
-			else if (cube[5][1][2]!=maincolor)
-			{
-				F();
-				F();
-				F();
+			if(cube[5][2][1]==maincolor)
+			{ 
+				if (cube[5][3][2]!=maincolor)
+				{
+					F();
+				}
+				else if (cube[5][2][3]!=maincolor) 
+				{
+					F();
+					F();
+				}
+				else if (cube[5][1][2]!=maincolor)
+				{
+					F();
+					F();
+					F();
+				}
 			}
 			L(); //将上面的maincolor块翻转到前面 
 		}
@@ -515,20 +546,23 @@ int stage2()
 							B();
 						}
 						//把前面上方三格留出空位 
-						if (cube[5][2][1]!=maincolor)
+						if (cube[5][1][2]==maincolor)
 						{
-							F();
-						}
-						else if (cube[5][3][2]!=maincolor) 
-						{
-							F();
-							F();
-						}
-						else if (cube[5][2][3]!=maincolor)
-						{
-							F();
-							F();
-							F();
+							if (cube[5][2][1]!=maincolor)
+							{
+								F();
+							}
+							else if (cube[5][3][2]!=maincolor) 
+							{
+								F();
+								F();
+							}
+							else if (cube[5][2][3]!=maincolor)
+							{
+								F();
+								F();
+								F();
+							}
 						}
 						U(); //化为4类情况 	
 						status=1; 
@@ -541,21 +575,24 @@ int stage2()
 			}
 			if (status==1)
 			{
-				//把前面右侧三格留出空位 
-				if (cube[5][1][2]!=maincolor)
+				//把前面右侧三格留出空位
+				if (cube[5][2][3]==maincolor)
 				{
-					F();
-				}
-				else if (cube[5][2][1]!=maincolor) 
-				{
-					F();
-					F();
-				}
-				else if (cube[5][3][2]!=maincolor)
-				{
-					F();
-					F();
-					F();
+					if (cube[5][1][2]!=maincolor)
+					{
+						F();
+					}
+					else if (cube[5][2][1]!=maincolor) 
+					{
+						F();
+						F();
+					}
+					else if (cube[5][3][2]!=maincolor)
+					{
+						F();
+						F();
+						F();
+					}
 				}
 				R(); //将上面的maincolor块翻转到前面 
 				R(); 
@@ -585,20 +622,23 @@ int stage2()
 				if (status==1)
 				{
 					//把前面左侧三格留出空位 
-					if (cube[5][3][2]!=maincolor)
+					if(cube[5][2][1]==maincolor)
 					{
-						F();
-					}
-					else if (cube[5][2][3]!=maincolor) 
-					{
-						F();
-						F();
-					}
-					else if (cube[5][1][2]!=maincolor)
-					{
-						F();
-						F();
-						F();
+						if (cube[5][3][2]!=maincolor)
+						{
+							F();
+						}
+						else if (cube[5][2][3]!=maincolor) 
+						{
+							F();
+							F();
+						}
+						else if (cube[5][1][2]!=maincolor)
+						{
+							F();
+							F();
+							F();
+						}
 					}
 					L(); //将上面的maincolor块翻转到前面 
 					L();
@@ -634,3 +674,262 @@ void output(char message[])
 	fout<<message<<endl;
 	fout.close();
 }
+
+int stage3()
+{
+	int maincolor=cube[5][2][2];
+	int status=0;
+	if(cube[3][1][1]!=maincolor) //4类情况，将213,433,131,231化为311范式 
+	{
+		if(cube[2][1][3]==maincolor)
+		{
+			B();
+			status=1;
+		}
+		else if(cube[4][3][3]==maincolor)
+		{
+			B();
+			B();
+			status=1;
+		}
+		else if(cube[1][3][1]==maincolor)
+		{
+			B();
+			B();
+			B();
+			status=1;
+		}
+	}
+	else
+	{
+		status=1;
+	}
+	if(status==1) 
+	{
+		rotatexy(); //保护前面中间行 
+		if (cube[5][3][1]==maincolor)
+		{
+			D(); //保护前面左下角已经到位的块
+		}
+		L(); //将311翻转到前面 
+		rotatexy(); //恢复前面中间行 
+		rotatexy();
+		rotatexy();
+		if (cube[2][3][1]==maincolor)
+		{
+			D(); //恢复前面左下角已经到位的块
+			D();
+			D();
+		}
+	}
+	else //如果不是4类情况 
+	{
+		if(cube[3][1][3]!=maincolor) //5类情况，将313,233,431,111化为313范式 
+		{
+			if(cube[2][3][3]==maincolor)
+			{
+				B();
+				status=1;
+			}
+			else if(cube[4][3][1]==maincolor)
+			{
+				B();
+				B();
+				status=1;
+			}
+			else if(cube[1][1][1]==maincolor)
+			{
+				B();
+				B();
+				B();
+				status=1;
+			}
+		}
+		else
+		{
+			status=1;
+		}
+		if(status==1) 
+		{
+			rotatexy(); //保护前面中间行 
+			rotatexy();
+			rotatexy();
+			if (cube[5][3][3]==maincolor)
+			{
+				D(); //保护前面右下角已经到位的块
+				D();
+				D();
+			}
+			R(); //将313翻转到前面
+			R();
+			R(); 
+			rotatexy(); //恢复前面中间行 
+			if (cube[1][3][3]==maincolor)
+			{
+				D(); //恢复前面右下角已经到位的块
+			}
+		}
+		else //如果不是5类情况 
+		{
+			if(cube[3][3][1]!=maincolor) //2类情况，将331,133,413,211化为331范式 
+			{
+				if(cube[1][3][3]==maincolor)
+				{
+					F();
+					status=1;
+				}
+				else if(cube[4][1][3]==maincolor)
+				{
+					F();
+					F();
+					status=1;
+				}
+				else if(cube[2][1][1]==maincolor)
+				{
+					F();
+					F();
+					F();
+					status=1;
+				}
+			}
+			else
+			{
+				status=1;
+			}
+			if(status==1) //开始将331范式化为311范式 
+			{
+				rotatexy(); 
+				D();
+				L();
+				rotatexy(); 
+				rotatexy(); 
+				rotatexy(); 
+				D();
+				D();
+				D();
+				B();
+				B();
+				B(); //至此将331范式化为311范式 
+			}
+			else //如果不是2类情况 
+			{
+				if(cube[3][3][3]!=maincolor) //3类情况，将333,113,411,231化为333范式 
+				{
+					if(cube[1][1][3]==maincolor)
+					{
+						F();
+						status=1;
+					}
+					else if(cube[4][1][1]==maincolor)
+					{
+						F();
+						F();
+						status=1;
+					}
+					else if(cube[2][3][1]==maincolor)
+					{
+						F();
+						F();
+						F();
+						status=1;
+					}
+				}
+				else
+				{
+					status=1;
+				}
+				if(status==1) //开始将333范式化为313范式 
+				{
+					rotatexy(); 
+					rotatexy(); 
+					rotatexy(); 
+					D();
+					D();
+					D();
+					R();
+					R();
+					R(); 
+					rotatexy(); 
+					D();
+					B(); //至此将331范式化为313范式 
+				}
+				else //如果不是2类情况 
+				{
+					if(cube[6][1][3]!=maincolor) //6类情况，将613,633,631,611化为613范式 
+					{
+						if(cube[6][3][3]==maincolor)
+						{
+							B();
+						}
+						else if(cube[6][3][1]==maincolor)
+						{
+							B();
+							B();
+						}
+						else if(cube[6][1][1]==maincolor)
+						{
+							B();
+							B();
+							B();
+						}
+					}
+					else
+					{
+						status=1;
+					}
+					if (status==1) //开始将613范式化为331范式 
+					{
+						if (cube[5][1][1]==maincolor) //将511腾空 
+						{
+							if (cube[5][3][1]!=maincolor)
+							{
+								F();
+							}
+							else if (cube[5][3][3]!=maincolor)
+							{
+								F();
+								F();
+							}
+							else if (cube[5][1][3]!=maincolor)
+							{
+								F();
+								F();
+								F();
+							}
+						}
+						rotatexy();
+						D();	
+						L();
+						rotatexy();
+						rotatexy();
+						rotatexy();
+						D();
+						D();
+						D(); //至此将613范式化为331范式 
+					}
+				}
+			}
+		}
+	}
+	return status;
+}
+
+void stage3_finalize()
+{
+	if (cube[3][3][2]==cube[1][2][2])
+	{
+		rotatexz();
+	}
+	else if (cube[3][3][2]==cube[4][2][2])
+	{
+		rotatexz();
+		rotatexz();
+	}
+	else if (cube[3][3][2]==cube[2][2][2])
+	{
+		rotatexz();
+		rotatexz();
+		rotatexz();
+	}
+}
+
