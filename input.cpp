@@ -8,63 +8,41 @@ int main()
 {
 	int i;
 	int x;
-	char c;
+	char c[55];
 	//initialize output file
 	ofstream fout("cube.txt");  
 	fout.close();
-	for (i=1;i<55;i++)
+	cout<<"请按顺序输入左、右、上、下、前、后面的颜色"<<endl; 
+	cout<<"..左面..|..右面..|..上面..|..下面..|..前面..|..后面..|"<<endl;
+	cin>>c;
+	for (i=0;i<54;i++)
 	{
-		if (i==1)
-		{
-			cout<<"请输入左面"<<endl;
-		}
-		else if (i==10)
-		{
-			cout<<"请输入右面"<<endl;
-		}
-		else if (i==19)
-		{
-			cout<<"请输入上面"<<endl;
-		}
-		else if (i==28)
-		{
-			cout<<"请输入下面"<<endl;
-		}
-		else if (i==37)
-		{
-			cout<<"请输入前面"<<endl;
-		}
-		else if (i==46)
-		{
-			cout<<"请输入后面"<<endl;
-		}
-		cin>>c; 
-		if (c=='r')
+		if (c[i]=='r')
 		{
 			 x=1;
 		}
-		else if (c=='g')
+		else if (c[i]=='g')
 		{
 			 x=2;
 		}
-		else if (c=='w')
+		else if (c[i]=='w')
 		{
 			 x=3;
 		}
-		else if (c=='y')
+		else if (c[i]=='y')
 		{
 			 x=4;
 		}
-		else if (c=='b')
+		else if (c[i]=='b')
 		{
 			 x=5;
 		}
-		else if (c=='o')
+		else if (c[i]=='o')
 		{
 			 x=6;
 		}
 		output(x);
-		if (i%9==0)
+		if (i%9==8)
 		{
 			newline();
 		}

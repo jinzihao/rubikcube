@@ -651,20 +651,13 @@ int stage2()
 
 void stage2_finalize() //finalize to match goal 2 
 {
-	if (cube[3][3][2]==cube[1][2][2])
+	int i=0,s;
+	s=(cube[1][2][3]==cube[1][2][2])+(cube[3][3][2]==cube[3][2][2])+(cube[2][2][1]==cube[2][2][2])+(cube[4][1][2]==cube[4][2][2]);
+	while(s<2&&i<3)
 	{
 		rotatexz();
-	}
-	else if (cube[3][3][2]==cube[4][2][2])
-	{
-		rotatexz();
-		rotatexz();
-	}
-	else if (cube[3][3][2]==cube[2][2][2])
-	{
-		rotatexz();
-		rotatexz();
-		rotatexz();
+		s=(cube[1][2][3]==cube[1][2][2])+(cube[3][3][2]==cube[3][2][2])+(cube[2][2][1]==cube[2][2][2])+(cube[4][1][2]==cube[4][2][2]);
+		i++;
 	}
 }
 
