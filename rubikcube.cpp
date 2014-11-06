@@ -28,30 +28,6 @@ int cexist2(int a, int x, int y, int z);
 int cequal3(int a, int b, int c, int x, int y, int z);
 int cexist3(int a, int x, int y, int z);
 int sideexist(int color, int face1, int face2);
-
-void output_c(char message) 
-{ 
-	ofstream fout("solution.txt", ios::out | ios::app);   
-	fout<<message<<endl; 
-	fout.close(); 
-}
-
-void dump()
-{
-	int i,j,k;
-	output("~~~~~~~~");
-	for (i=1;i<7;i++)
-	{
-		for (j=1;j<4;j++)
-		{
-			for (k=1;k<4;k++)
-			{
-				output_c(cube[i][j][k]+48);
-			}
-		}
-	}
-	output("~~~~~~~~"); 
-}
  
 int main(int argc, char *argv[])
 {
