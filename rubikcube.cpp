@@ -28,6 +28,29 @@ int cexist2(int a, int x, int y, int z);
 int cequal3(int a, int b, int c, int x, int y, int z);
 int cexist3(int a, int x, int y, int z);
 int sideexist(int color, int face1, int face2);
+void output_c(char message) 
+{ 
+	ofstream fout("solution.txt", ios::out | ios::app);   
+	fout<<message<<endl; 
+	fout.close(); 
+}
+
+void dump()
+{
+	int i,j,k;
+	output("~~~~~~~~~~~~~~~~");
+	for (i=1;i<7;i++)
+	{
+		for (j=1;j<4;j++)
+		{
+			for (k=1;k<4;k++)
+			{
+				output_c(cube[i][j][k]+48);
+			}
+		}
+	}
+	output("~~~~~~~~~~~~~~~~"); 
+}
  
 int main(int argc, char *argv[])
 {
@@ -737,8 +760,28 @@ int main(int argc, char *argv[])
 						D();
 					}
 				}
+				//此处有隐患，可能陷入死循环 
 				//如果523和522不同的话，将前一步已经移到512的边块进一步移到523 
-				if (cube[5][2][3]!=cube[5][2][2])
+				if (cube[5][2][1]!=cube[5][2][2])
+				{
+					U();
+					U();
+					U();
+					L();
+					L();
+					L();
+					U();
+					L();
+					U();
+					F();
+					U();
+					U();
+					U();
+					F();
+					F();
+					F(); 
+				}
+				else if (cube[5][2][3]!=cube[5][2][2])
 				{
 					U();
 					R();
@@ -758,31 +801,10 @@ int main(int argc, char *argv[])
 					F();
 				}
 				//如果523和522相同的话，把512移到521 
-				else if (cube[5][2][1]!=cube[5][2][2])
-				{
-					U();
-					U();
-					U();
-					L();
-					L();
-					L();
-					U();
-					L();
-					U();
-					F();
-					U();
-					U();
-					U();
-					F();
-					F();
-					F(); 
-				}
-			} 
-			//至此Stage4完成 
+			}
 			//进入Stage5，如果是State2，通过以下步骤化为State3或State4 
 			if ( ( (cube[3][1][2]==4)||(cube[3][2][1]==4)||(cube[3][2][3]==4)||(cube[3][3][2]==4) ) ==false)
 			{
-				cout<<"state2"<<endl;
 				F();
 				U();
 				R();
@@ -937,7 +959,7 @@ int main(int argc, char *argv[])
 			b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
 			c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
 			d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
-			//旋转上面直至达到AB、AD或BC范式 
+			//整体旋转直至达到AB、AD或BC范式 
 			while ( (a&&b || a&&d || b&&c) == false)
 			{
 				U();
@@ -964,6 +986,8 @@ int main(int argc, char *argv[])
 				B();
 				R();
 				F();
+				F();
+				F();
 				R();
 				R();
 				R();
@@ -986,9 +1010,11 @@ int main(int argc, char *argv[])
 				while ((a&&b)==false) 
 				{
 					U();
-					U();
-					U();
 					rotatexy();
+					rotatexy();
+					rotatexy();
+					D();
+					D();
 					D();
 					a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
 					b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
