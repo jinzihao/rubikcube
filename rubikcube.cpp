@@ -315,6 +315,14 @@ int main(int argc, char *argv[])
 				R();
 				R();
 			}
+			else if(testside(5,1,3,2))
+			{
+				F();
+				F();
+				F();
+				D();
+				F();
+			} 
 			//将下面的绿白色块旋转到右侧
 			if (testside(5,4,3,2))
 			{
@@ -385,6 +393,22 @@ int main(int argc, char *argv[])
 			{
 				R();
 			}
+			else if(testside(5,1,3,1))
+			{
+				F();
+				F();
+				F();
+				D();
+				F();
+			} 
+			else if(testside(6,1,3,1))
+			{
+				B(); 
+				D();
+				B(); 
+				B(); 
+				B(); 
+			} 
 			//将下面的红白色块旋转到右侧
 			if (testside(5,4,3,1))
 			{
@@ -803,7 +827,7 @@ int main(int argc, char *argv[])
 				//如果523和522相同的话，把512移到521 
 			}
 			//进入Stage5，如果是State2，通过以下步骤化为State3或State4 
-			if ( ( (cube[3][1][2]==4)||(cube[3][2][1]==4)||(cube[3][2][3]==4)||(cube[3][3][2]==4) ) ==false)
+			if ( ( (cube[3][1][2]==4)+(cube[3][2][1]==4)+(cube[3][2][3]==4)+(cube[3][3][2]==4) ) <2)
 			{
 				F();
 				U();
@@ -828,17 +852,29 @@ int main(int argc, char *argv[])
 					if ((cube[3][3][2]==4) && (cube[3][2][1]==4))
 					{
 						U();
+						rotatexy();
+						rotatexy();
+						rotatexy();
+						D();
+						D();
+						D();
 					}
 					else if ((cube[3][2][3]==4) && (cube[3][3][2]==4))
 					{
 						U();
 						U();
+						rotatexy();
+						rotatexy();
+						D();
+						D();
 					}
 					else if ((cube[3][1][2]==4) && (cube[3][2][3]==4))
 					{
 						U();
 						U();
 						U();
+						rotatexy();
+						D();
 					}
 					//将State3化为State1
 					F();
@@ -861,6 +897,12 @@ int main(int argc, char *argv[])
 					if ((cube[3][1][2]==4) && (cube[3][3][2]==4))
 					{
 						U();
+						rotatexy();
+						rotatexy();
+						rotatexy();
+						D();
+						D();
+						D();
 					}
 					//将State4化为State1
 					F();
@@ -878,12 +920,13 @@ int main(int argc, char *argv[])
 				}
 			}
 			//进入Stage5，2nd Step
-			if( (cube[3][1][1]!=4) || (cube[3][1][3]!=4) || (cube[3][3][1]!=4) || (cube[3][3][3]!=4) )
+			//每次执行序列前，调整至State 1/2/3中的一种范式 
+			while( (cube[3][1][1]!=4) || (cube[3][1][3]!=4) || (cube[3][3][1]!=4) || (cube[3][3][3]!=4) )
 			{
 				//如果是State1的话...
-				if ( (cube[3][1][1]==4) || (cube[3][1][3]==4) || (cube[3][3][1]==4) || (cube[3][3][3]==4) == false)
+				if ( ((cube[3][1][1]==4) || (cube[3][1][3]==4) || (cube[3][3][1]==4) || (cube[3][3][3]==4)) == false)
 				{
-					//将左面右上角转为黄色面 
+					//整体旋转，将左面右上角转为黄色面 
 					while (cube[1][1][3]!=4)
 					{
 						U();
@@ -925,9 +968,6 @@ int main(int argc, char *argv[])
 						D();
 					}
 				}
-			}
-			while( (cube[3][1][1]!=4) || (cube[3][1][3]!=4) || (cube[3][3][1]!=4) || (cube[3][3][3]!=4) )
-			{
 				R();
 				U();
 				R();
@@ -947,81 +987,30 @@ int main(int argc, char *argv[])
 			c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
 			d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
 			//将四周上角块4个中至少2个归位 
-			while((a+b+c+d)<2) 
+			while ((a&&b&&c&&d)==false)
 			{
-				U();
-				a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
-				b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
-				c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
-				d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
-			}
-			a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
-			b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
-			c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
-			d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
-			//整体旋转直至达到AB、AD或BC范式 
-			while ( (a&&b || a&&d || b&&c) == false)
-			{
-				U();
-				U();
-				U();
-				rotatexy();
-				D();
-				a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
-				b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
-				c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
-				d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );	
-			}
-			if (a+b+c+d<4)
-			{
-				//执行一次，如果是AB范式，可以直接得到ABCD范式；如果是BC范式或AD范式，执行一次再旋转可以得到AB范式 
-				R();
-				R();
-				R();
-				F();
-				R();
-				R();
-				R();
-				B();
-				B();
-				R();
-				F();
-				F();
-				F();
-				R();
-				R();
-				R();
-				B();
-				B();
-				R();
-				R();
-				U();
-				U();
-				U();
-			}
-			a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
-			b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
-			c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
-			d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
-			//如果不是ABCD范式的话... 
-			if ( (a&&b&&c&&d)==false)
-			{	
-				//化为AB范式 
-				while ((a&&b)==false) 
+				while((a+b+c+d)<2) 
 				{
 					U();
-					rotatexy();
-					rotatexy();
-					rotatexy();
-					D();
-					D();
-					D();
 					a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
 					b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
 					c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
 					d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
 				}
-				//由AB范式化为ABCD范式 
+				//整体旋转直至达到AB、AD或BC范式 
+				while ( (a&&b || a&&d || b&&c) == false)
+				{
+					U();
+					U();
+					U();
+					rotatexy();
+					D();
+					a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
+					b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
+					c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
+					d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );	
+				}
+				//由BC/AD范式化为AB范式，由AB范式化为ABCD范式 
 				R();
 				R();
 				R();
@@ -1033,6 +1022,8 @@ int main(int argc, char *argv[])
 				B();
 				R();
 				F();
+				F();
+				F();
 				R();
 				R();
 				R();
@@ -1043,6 +1034,10 @@ int main(int argc, char *argv[])
 				U();
 				U();
 				U();
+				a=( (cube[6][1][3]==cube[6][2][2])&&(cube[1][1][1]==cube[1][2][2]) );
+				b=( (cube[2][1][3]==cube[2][2][2])&&(cube[6][1][1]==cube[6][2][2]) );
+				c=( (cube[1][1][3]==cube[1][2][2])&&(cube[5][1][1]==cube[5][2][2]) );
+				d=( (cube[5][1][3]==cube[5][2][2])&&(cube[2][1][1]==cube[2][2][2]) );
 			}
 			//进入Stage6, 2nd Step
 			e=(cube[1][1][2]==cube[1][2][2]);
@@ -1149,7 +1144,7 @@ int main(int argc, char *argv[])
 				F();
 			}
 			//至此完成Stage6
-			//至此全部完成 
+			//至此全部完成
 		} //%END% 
 	} 
 	else
