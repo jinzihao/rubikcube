@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 			}
 		} 
 		r=validatecube(); //Preprocess: validate
-		if(r) 
+		if(r)
 		{ 
 			printf("Invalid cube, error number:%d",r); 
 		}
@@ -493,7 +493,6 @@ int main(int argc, char *argv[])
 			if (testcorner(4,5,1,1,5,3))
 			{
 				D();
-				
 			}
 			else if (testcorner(4,1,6,1,5,3))
 			{
@@ -689,7 +688,7 @@ int main(int argc, char *argv[])
 			{
 				//环顾四周，直到前面有错位的中间行边块为止，最多执行3次旋转操作 
 				i=0; 
-				while ( ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]=cube[5][2][3]) ) ) == false)
+				while ( ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]==cube[5][2][3]) ) ) == false)
 				{
 					if (i==3)
 					{
@@ -705,7 +704,7 @@ int main(int argc, char *argv[])
 					i++;
 				}
 				//将错位的中间行边块移动到正确位置 
-				if ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]=cube[5][2][3]) ) )
+				if ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]==cube[5][2][3]) ) )
 				{
 					U();
 					R();
