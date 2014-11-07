@@ -1125,7 +1125,6 @@ int main(int argc, char *argv[])
 			}
 			//至此完成Stage6
 			//至此全部完成
-			dump();
 		} //%END%
 	} 
 	else

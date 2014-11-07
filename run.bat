@@ -2,4 +2,4 @@
 input
 rubikcube cube.txt
 optimize solution.txt
-type solution_optimized | more
+type solution_optimized.txt | more
