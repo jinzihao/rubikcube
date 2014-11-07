@@ -28,29 +28,9 @@ int cexist2(int a, int x, int y, int z);
 int cequal3(int a, int b, int c, int x, int y, int z);
 int cexist3(int a, int x, int y, int z);
 int sideexist(int color, int face1, int face2);
-void output_c(char message) 
-{ 
-	ofstream fout("solution.txt", ios::out | ios::app);   
-	fout<<message<<endl; 
-	fout.close(); 
-}
-
-void dump()
-{
-	int i,j,k;
-	output("~~~~~~~~~~~~~~~~");
-	for (i=1;i<7;i++)
-	{
-		for (j=1;j<4;j++)
-		{
-			for (k=1;k<4;k++)
-			{
-				output_c(cube[i][j][k]+48);
-			}
-		}
-	}
-	output("~~~~~~~~~~~~~~~~"); 
-}
+void output_c(char message);
+void dump();
+void screendump();
  
 int main(int argc, char *argv[])
 {
@@ -704,11 +684,12 @@ int main(int argc, char *argv[])
 			R(); 
 			//此时前面为蓝，下面为白
 			//只要四周面下两行有未到位的方块，重复以下操作，一次使一个边块到位，反复以下操作，直至完成Stage4 
+			//此处有隐患，可能陷入死循环（六重循环） 
 			while(( (cube[5][2][1]==cube[5][2][2])&&(cube[5][2][3]==cube[5][2][2])&&(cube[1][2][1]==cube[1][2][2])&&(cube[1][2][3]==cube[1][2][2])&&(cube[6][2][1]==cube[6][2][2])&&(cube[6][2][3]==cube[6][2][2])&&(cube[2][2][1]==cube[2][2][2])&&(cube[2][2][3]==cube[2][2][2]) )==false)
 			{
 				//环顾四周，直到前面有错位的中间行边块为止，最多执行3次旋转操作 
 				i=0; 
-				while ( ((cube[1][2][3]==cube[5][2][2]) || (cube[2][2][1]==cube[5][2][2])) == false)
+				while ( ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]=cube[5][2][3]) ) ) == false)
 				{
 					if (i==3)
 					{
@@ -723,7 +704,8 @@ int main(int argc, char *argv[])
 					D();
 					i++;
 				}
-				if ( (cube[1][2][3]==cube[5][2][2]) || (cube[2][2][1]==cube[5][2][2]) )
+				//将错位的中间行边块移动到正确位置 
+				if ( ( (cube[1][2][3]==cube[5][2][2])&&(cube[1][2][2]==cube[5][2][1]) ) || ( (cube[2][2][1]==cube[5][2][2])&&(cube[2][2][2]=cube[5][2][3]) ) )
 				{
 					U();
 					R();
@@ -754,14 +736,14 @@ int main(int argc, char *argv[])
 					i++;
 				}
 				//将非黄、对应、未满的一个四周面转到前面 
-				if ((cube[3][3][2]!=4)&&(cube[5][1][2]==cube[5][2][2])&&(cube[5][2][1]!=cube[5][2][2]||cube[5][2][3]!=cube[5][2][2])==false)
+				if (((cube[3][3][2]!=4)&&(cube[5][1][2]==cube[5][2][2])&&((cube[5][2][1]!=cube[5][2][2])||(cube[5][2][3]!=cube[5][2][2])))==false)
 				{
 					if ((cube[3][2][3]!=4)&&(cube[2][1][2]==cube[2][2][2])&&(cube[2][2][1]!=cube[2][2][2]||cube[2][2][3]!=cube[2][2][2]))
 					{
 						U();
-						rotatexz();
-						rotatexz();
-						rotatexz();
+						rotatexy();
+						rotatexy();
+						rotatexy();
 						D();
 						D();
 						D();
@@ -770,8 +752,8 @@ int main(int argc, char *argv[])
 					{
 						U();
 						U();
-						rotatexz();
-						rotatexz();
+						rotatexy();
+						rotatexy();
 						D();
 						D();
 					}
@@ -780,13 +762,32 @@ int main(int argc, char *argv[])
 						U();
 						U();
 						U();
-						rotatexz();
+						rotatexy();
 						D();
 					}
 				}
-				//此处有隐患，可能陷入死循环 
-				//如果523和522不同的话，将前一步已经移到512的边块进一步移到523 
-				if (cube[5][2][1]!=cube[5][2][2])
+				//如果332和右面中心同色，则将332顺时针移动一次 
+				if (cube[3][3][2]==cube[2][2][2])
+				{
+					U();
+					R();
+					U();
+					U();
+					U();
+					R();
+					R();
+					R();
+					U();
+					U();
+					U();
+					F();
+					F();
+					F();
+					U();
+					F();
+				}
+				//如果332和左面中心同色，则将332逆时针移动一次 
+				else if (cube[3][3][2]==cube[1][2][2])
 				{
 					U();
 					U();
@@ -805,26 +806,6 @@ int main(int argc, char *argv[])
 					F();
 					F(); 
 				}
-				else if (cube[5][2][3]!=cube[5][2][2])
-				{
-					U();
-					R();
-					U();
-					U();
-					U();
-					R();
-					R();
-					R();
-					U();
-					U();
-					U();
-					F();
-					F();
-					F();
-					U();
-					F();
-				}
-				//如果523和522相同的话，把512移到521 
 			}
 			//进入Stage5，如果是State2，通过以下步骤化为State3或State4 
 			if ( ( (cube[3][1][2]==4)+(cube[3][2][1]==4)+(cube[3][2][3]==4)+(cube[3][3][2]==4) ) <2)
@@ -1145,7 +1126,8 @@ int main(int argc, char *argv[])
 			}
 			//至此完成Stage6
 			//至此全部完成
-		} //%END% 
+			dump();
+		} //%END%
 	} 
 	else
 	{
@@ -1685,4 +1667,76 @@ int sideexist(int color, int face1, int face2)
 	{
 		return 0;
 	}
+}
+
+void output_c(char message)
+{ 
+	ofstream fout("solution.txt", ios::out | ios::app);   
+	fout<<message<<endl; 
+	fout.close(); 
+}
+
+void dump()
+{
+	int i,j,k;
+	output("~~~~~~~~~~~~~~~~");
+	for (i=1;i<7;i++)
+	{
+		for (j=1;j<4;j++)
+		{
+			for (k=1;k<4;k++)
+			{
+				output_c(cube[i][j][k]+48);
+			}
+		}
+	}
+	output("~~~~~~~~~~~~~~~~"); 
+}
+
+void screendump()
+{
+	int i,j,k;
+	cout<<"~~~~~~~~~~~~~~~~"<<endl;
+	for (j=1;j<4;j++)
+	{
+		cout<<"       ";
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[3][j][k]<<" ";
+		}
+		cout<<endl;
+	}
+	for (j=1;j<4;j++)
+	{
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[1][j][k]<<" ";
+		}
+		cout<<" ";
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[5][j][k]<<" ";
+		}
+		cout<<" ";
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[2][j][k]<<" ";
+		}
+		cout<<" ";
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[6][j][k]<<" ";
+		}
+		cout<<endl;
+	}
+	for (j=1;j<4;j++)
+	{
+		cout<<"       ";
+		for (k=1;k<4;k++)
+		{
+			cout<<cube[4][j][k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<"~~~~~~~~~~~~~~~~"<<endl;
 }
